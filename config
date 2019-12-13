@@ -68,8 +68,8 @@ GRUB_BTRFS_IGNORE_SPECIFIC_PATH=("var/lib/docker" "@var/lib/docker")
 #GRUB_BTRFS_OVERRIDE_BOOT_PARTITION_DETECTION="false"
 
 # Might be grub2 on some systems ex. /boot/grub2/...
-# Default: "grub"
-#GRUB_BTRFS_DIRNAME="grub"
+# Default: "/boot/grub"
+#GRUB_BTRFS_DIRNAME="/boot/grub"
 
 # Might be 'grub2-mkconfig' on some systems
 # Default: /usr/bin/grub-mkconfig
