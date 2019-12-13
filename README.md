@@ -118,7 +118,7 @@ You have the possibility to modify many parameters in `/etc/default/grub-btrfs/c
 
 	Disable grub-btrfs.
 
-* GRUB_BTRFS_DIRNAME="grub"
+* GRUB_BTRFS_DIRNAME="/boot/grub"
 
 	Name of the grub folder in `/boot/`, might be grub2 on some distributions.
 
