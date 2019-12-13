@@ -90,7 +90,7 @@ snapper_config=${GRUB_BTRFS_SNAPPER_CONFIG:-"root"}
 ## Override boot partition detection
 override_boot_partition_detection=${GRUB_BTRFS_OVERRIDE_BOOT_PARTITION_DETECTION:-"false"}
 ## Customize GRUB directory
-grub_directory=${GRUB_BTRFS_DIRNAME:-"grub"}
+grub_directory=${GRUB_BTRFS_DIRNAME:-"/boot/grub"}
 
 ########################
 ### variables script ###
@@ -100,13 +100,13 @@ export TEXTDOMAIN=grub-btrfs-git
 export TEXTDOMAINDIR="/usr/share/locale"
 ## Probe info "Boot partition"
 # Boot device
-boot_device=$(${grub_probe} --target=device /boot)
+boot_device=$(${grub_probe} --target=device ${grub_directory})
 # hints string
 boot_hs=$(${grub_probe} --device ${boot_device} --target="hints_string" 2>/dev/null)
 # UUID of the boot partition
 boot_uuid=$(${grub_probe} --device ${boot_device} --target="fs_uuid" 2>/dev/null)
 # Type filesystem of boot partition
-boot_fs=$(${grub_probe} --target="fs" /boot 2>/dev/null)
+boot_fs=$(${grub_probe} --target="fs" ${grub_directory} 2>/dev/null)
 ## Probe info "Root partition"
 # Root device
 root_device=$(${grub_probe} --target=device /)
@@ -159,10 +159,10 @@ test_btrfs()
 
 ## Create entry
 entry()	{
-echo "$@" >> "/boot/$grub_directory/grub-btrfs.cfg"
+echo "$@" >> "$grub_directory/grub-btrfs.cfg"
 # local arg="$@"
-# echo "${arg}" >> "/boot/$grub_directory/grub-btrfs.cfg"
-# cat << EOF >> "/boot/$grub_directory/grub-btrfs.cfg"
+# echo "${arg}" >> "$grub_directory/grub-btrfs.cfg"
+# cat << EOF >> "$grub_directory/grub-btrfs.cfg"
 # ${arg}
 # EOF
 }
@@ -508,8 +508,8 @@ printf "###### - Grub-btrfs: Snapshot detection started - ######\n" >&2 ;
 # if btrfs prog isn't installed, exit
 test_btrfs
 # Delete existing config
-#rm -f --preserve-root "/boot/$grub_directory/grub-btrfs.cfg"
-> "/boot/$grub_directory/grub-btrfs.cfg"
+#rm -f --preserve-root "$grub_directory/grub-btrfs.cfg"
+> "$grub_directory/grub-btrfs.cfg"
 # Create mount point then mounting
 [[ ! -d $gbgmp ]] && mkdir -p $gbgmp
 mount -o subvolid=5 /dev/disk/by-uuid/$root_uuid $gbgmp/
@@ -545,7 +545,7 @@ fi
 if [[ "${count_limit_snap}" = "0" || -z "${count_limit_snap}" ]]; then
 	print_error "No snapshots found."
 fi
-root_grub="$(make_system_path_relative_to_its_root /boot/$grub_directory)"
+root_grub="$(make_system_path_relative_to_its_root $grub_directory)"
 # Make a submenu in GRUB (grub.cfg)
 cat << EOF
 submenu '${submenuname}' {
